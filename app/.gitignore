@@ -1,0 +1,13 @@
+/node_modules
+/public/upload
+/public/vendor
+/public/css
+/public/js
+/public/images
+/public/fonts
+/vendor
+.env
+.phpunit.result.cache
+.phpstorm.meta.php
+/.idea
+/.vscode

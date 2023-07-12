@@ -1,0 +1,127 @@
+version: '3.7'
+
+services:
+
+  # Nginx
+  nginx:
+    environment:
+      - SELF_SIGNED_HOST=${APP_HOST}
+
+  # Composer
+  composer:
+    build:
+      context: php-fpm
+      target: composer
+      args:
+        - UID=${UID}
+        - GID=${GID}
+        - INSTALL_OPCACHE=${PHP_INSTALL_OPCACHE}
+        - INSTALL_XDEBUG=${PHP_INSTALL_XDEBUG}
+    container_name: ${COMPOSE_PROJECT_NAME}-composer
+    restart: "no"
+    entrypoint: composer
+    user: ${UID}:${GID}
+    working_dir: ${APP_PATH}
+    environment:
+      - UID=${UID}
+      - GID=${GID}
+      - COMPOSER_ALLOW_SUPERUSER=${COMPOSER_ALLOW_SUPERUSER}
+      - COMPOSER_MEMORY_LIMIT=${COMPOSER_MEMORY_LIMIT}
+      - COMPOSER_MIRROR_PATH_REPOS=${COMPOSER_MIRROR_PATH_REPOS}
+      - COMPOSER_TOKEN=${COMPOSER_TOKEN}
+    volumes:
+      - ${SOURCE_PATH}:${APP_PATH}
+      - ${SOURCE_REPO_PATH}:${APP_REPO_PATH}
+
+  # Stan
+  stan:
+    build:
+      context: php-fpm
+      target: php
+      args:
+        - UID=${UID}
+        - GID=${GID}
+        - INSTALL_OPCACHE={PHP_INSTALL_OPCACHE}
+        - INSTALL_XDEBUG={PHP_INSTALL_XDEBUG}
+    container_name: ${COMPOSE_PROJECT_NAME}-stan
+    restart: "no"
+    entrypoint: php vendor/bin/phpstan
+    user: ${UID}:${GID}
+    working_dir: ${APP_PATH}
+    environment:
+      - UID=${UID}
+      - GID=${GID}
+    volumes:
+      - ${SOURCE_PATH}:${APP_PATH}
+
+  # PHP Code Styler
+  phpcs:
+    build:
+      context: php-fpm
+      target: php
+      args:
+        - UID=${UID}
+        - GID=${GID}
+        - INSTALL_OPCACHE={PHP_INSTALL_OPCACHE}
+        - INSTALL_XDEBUG={PHP_INSTALL_XDEBUG}
+    container_name: ${COMPOSE_PROJECT_NAME}-phpcs
+    restart: "no"
+    entrypoint: php vendor/bin/phpcs
+    user: ${UID}:${GID}
+    working_dir: ${APP_PATH}
+    environment:
+      - UID=${UID}
+      - GID=${GID}
+    volumes:
+      - ${SOURCE_PATH}:${APP_PATH}
+
+  # PHP Code Beautifier
+  phpcbf:
+    build:
+      context: php-fpm
+      target: php
+      args:
+        - UID=${UID}
+        - GID=${GID}
+        - INSTALL_OPCACHE={PHP_INSTALL_OPCACHE}
+        - INSTALL_XDEBUG={PHP_INSTALL_XDEBUG}
+    container_name: ${COMPOSE_PROJECT_NAME}-phpcbf
+    restart: "no"
+    entrypoint: php vendor/bin/phpcbf
+    user: ${UID}:${GID}
+    working_dir: ${APP_PATH}
+    environment:
+      - UID=${UID}
+      - GID=${GID}
+    volumes:
+      - ${SOURCE_PATH}:${APP_PATH}
+
+  # Postgres web UI
+  pgadmin:
+    image: dpage/pgadmin4:6.5
+    container_name: ${COMPOSE_PROJECT_NAME}-pgadmin
+    restart: always
+    expose:
+      - ${DB_ADMIN_PORT}
+    environment:
+      - VIRTUAL_HOST=pgadmin.${APP_HOST}
+      - VIRTUAL_PORT=${DB_ADMIN_PORT}
+      - VIRTUAL_NETWORK=proxy
+      - SELF_SIGNED_HOST=pgadmin.${APP_HOST}
+      - PGADMIN_DEFAULT_EMAIL=${DB_ADMIN_USER}
+      - PGADMIN_DEFAULT_PASSWORD=${DB_ADMIN_PASSWORD}
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    depends_on:
+      - db
+    links:
+      - db:${DB_HOST}
+    networks:
+      - proxy
+      - default
+    healthcheck:
+      test: ["CMD", "wget", "-O", "-", "http://localhost:80"]
+      interval: 5s
+
+volumes:
+  pgadmin:

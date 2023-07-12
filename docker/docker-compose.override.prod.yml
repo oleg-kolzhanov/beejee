@@ -1,0 +1,38 @@
+version: '3.7'
+
+services:
+
+  # Nginx
+  nginx:
+    environment:
+      - LETSENCRYPT_HOST=${APP_HOST}
+      - LETSENCRYPT_EMAIL=${CERT_EMAIL}
+
+  # Composer
+  composer:
+    build:
+      context: php-fpm
+      target: composer
+      args:
+        - UID=${UID}
+        - GID=${GID}
+        - INSTALL_OPCACHE=${PHP_INSTALL_OPCACHE}
+        - INSTALL_XDEBUG=${PHP_INSTALL_XDEBUG}
+    container_name: ${COMPOSE_PROJECT_NAME}-composer
+    restart: "no"
+    entrypoint: composer
+    user: ${UID}:${GID}
+    working_dir: ${APP_PATH}
+    environment:
+      - UID=${UID}
+      - GID=${GID}
+      - COMPOSER_ALLOW_SUPERUSER=${COMPOSER_ALLOW_SUPERUSER}
+      - COMPOSER_MEMORY_LIMIT=${COMPOSER_MEMORY_LIMIT}
+      - COMPOSER_MIRROR_PATH_REPOS=${COMPOSER_MIRROR_PATH_REPOS}
+      - COMPOSER_TOKEN=${COMPOSER_TOKEN}
+    volumes:
+      - ${SOURCE_PATH}:${APP_PATH}
+      - ${SOURCE_REPO_PATH}:${APP_REPO_PATH}
+
+volumes:
+  pgadmin:
