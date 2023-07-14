@@ -1,8 +1,14 @@
 <?php declare(strict_types=1);
 
-require '../vendor/autoload.php';
+const APP_DIR = __DIR__ . '/../';
+
+session_start();
+
+require APP_DIR . 'vendor/autoload.php';
 
 use App\App;
+use App\AppContainer;
 
-$app = new App();
+$appContainer = AppContainer::getInstance();
+$app = App::getInstance();
 $app();
