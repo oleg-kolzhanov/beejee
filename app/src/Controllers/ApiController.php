@@ -3,6 +3,10 @@
 namespace App\Controllers;
 
 use App\Dto\RequestTransformer;
+use App\Services\TodoService;
+use DI\DependencyException;
+use DI\NotFoundException;
+use Throwable;
 
 /**
  * Controller.
@@ -11,42 +15,26 @@ class ApiController extends Controller
 {
     private RequestTransformer $requestTransformer;
 
-    public function __construct(RequestTransformer $requestTransformer)
+    private TodoService $todoService;
+
+    public function __construct(TodoService $todoService, RequestTransformer $requestTransformer)
     {
+        $this->todoService = $todoService;
         $this->requestTransformer = $requestTransformer;
 
         parent::__construct();
     }
 
+    /**
+     * @throws Throwable
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
     public function index(): string
     {
 
-        if (isset($_POST)) {
-            $requestDto =  $this->requestTransformer->transform($_POST);
-        }
-
-        $data = [
-            "draw" => 1,
-            "recordsTotal" => 57,
-            "recordsFiltered" => 57,
-            "data" => [
-                [
-                    "Airi",
-                    "Satou",
-                    "Accountant",
-                ],
-                [
-                    "Angelica",
-                    "Ramos",
-                    "Chief Executive Officer (CEO)",
-                ],
-                [
-                    "Ashton",
-                    "Cox",
-                    "Junior Technical Author",
-                ],
-            ]
-        ];
+        $requestDto =  $this->requestTransformer->transform($_POST);
+        $data = $this->todoService->get($requestDto);
 
         return $this->resource($data);
     }
