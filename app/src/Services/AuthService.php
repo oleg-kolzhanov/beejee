@@ -20,6 +20,7 @@ class AuthService implements AuthContract
 
     public function logout(): bool
     {
+        unset($_SESSION['user']);
         return session_destroy();
     }
 

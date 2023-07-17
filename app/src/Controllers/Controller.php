@@ -17,19 +17,9 @@ class Controller
 
     private array $data;
 
-    /**
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
     public function __construct()
     {
         $this->app = App::getInstance();
-
-        /** @var AuthContract $authService */
-        $authService = $this->app->getContainer()->make(AuthContract::class);
-        $this->data = [
-            'isLogged' => $authService->isLogged(),
-        ];
     }
 
     protected function render(string $template, array $data = []): string
@@ -46,9 +36,17 @@ class Controller
     /**
      * @param array $data
      * @return array
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     private function getData(array $data): array
     {
+        /** @var AuthContract $authService */
+        $authService = $this->app->getContainer()->make(AuthContract::class);
+        $this->data = [
+            'isLogged' => $authService->isLogged(),
+        ];
+
         return array_merge($data, $this->data);
     }
 }
