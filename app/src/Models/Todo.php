@@ -9,6 +9,7 @@ class Todo extends Model
     public array $searchableColumns = [
         'name',
         'email',
-        'text',
+//        'text',
+        'done',
     ];
 }

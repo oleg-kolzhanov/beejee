@@ -13,29 +13,23 @@ use Jenssegers\Blade\Blade;
  */
 class Controller
 {
-    private App $app;
-
-    private array $data;
+    protected App $app;
+    protected bool $isLogged;
 
     public function __construct()
     {
         $this->app = App::getInstance();
+        /** @var AuthContract $authService */
+        $authService = $this->app->getContainer()->make(AuthContract::class);
+        $this->isLogged = $authService->isLogged();
     }
 
-    /**
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
     protected function render(string $template, array $data = []): string
     {
         $blade = new Blade([APP_DIR . '/views'], APP_DIR . '/cache');
         return $blade->render($template, $this->getData($data));
     }
 
-    /**
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
     protected function resource(array $data = []): string
     {
         header('Content-Type: application/json; charset=utf-8');
@@ -45,17 +39,47 @@ class Controller
     /**
      * @param array $data
      * @return array
-     * @throws DependencyException
-     * @throws NotFoundException
      */
     private function getData(array $data): array
     {
-        /** @var AuthContract $authService */
-        $authService = $this->app->getContainer()->make(AuthContract::class);
-        $this->data = [
-            'isLogged' => $authService->isLogged(),
+        $dataCommon = [
+            'isLogged' => $this->isLogged,
         ];
 
-        return array_merge($data, $this->data);
+        return array_merge($data, $dataCommon);
+    }
+
+    protected function notFound(): string
+    {
+        header('Not found', true, 404);
+
+        $messageHeader = 'Not found';
+        $messageText = 'This page not found.';
+        $messageLink = '/';
+        $messageButton = 'Go home';
+
+        return $this->render('messages.info', [
+            'messageHeader' => $messageHeader,
+            'messageText' => $messageText,
+            'messageLink' => $messageLink,
+            'messageButton' => $messageButton,
+        ]);
+    }
+
+    protected function accessDenied(): string
+    {
+        header('Access denied', true, 403);
+
+        $messageHeader = 'Access denied';
+        $messageText = 'Log in to access.';
+        $messageLink = '/login';
+        $messageButton = 'Log in';
+
+        return $this->render('messages.info', [
+            'messageHeader' => $messageHeader,
+            'messageText' => $messageText,
+            'messageLink' => $messageLink,
+            'messageButton' => $messageButton,
+        ]);
     }
 }

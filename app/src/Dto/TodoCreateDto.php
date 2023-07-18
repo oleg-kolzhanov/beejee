@@ -5,7 +5,7 @@ namespace App\Dto;
 /**
  * ToDo DTO.
  */
-class TodoDto
+class TodoCreateDto
 {
     /**
      * Constructor.
@@ -29,9 +29,9 @@ class TodoDto
 
     /**
      * @param string $name
-     * @return TodoDto
+     * @return TodoCreateDto
      */
-    public function setName(string $name): TodoDto
+    public function setName(string $name): TodoCreateDto
     {
         $this->name = $name;
         return $this;
@@ -47,9 +47,9 @@ class TodoDto
 
     /**
      * @param string $email
-     * @return TodoDto
+     * @return TodoCreateDto
      */
-    public function setEmail(string $email): TodoDto
+    public function setEmail(string $email): TodoCreateDto
     {
         $this->email = $email;
         return $this;
@@ -65,9 +65,9 @@ class TodoDto
 
     /**
      * @param string $text
-     * @return TodoDto
+     * @return TodoCreateDto
      */
-    public function setText(string $text): TodoDto
+    public function setText(string $text): TodoCreateDto
     {
         $this->text = $text;
         return $this;

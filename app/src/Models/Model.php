@@ -19,6 +19,11 @@ class Model
         $this->db = App::getInstance()->getDb();
     }
 
+    public function find(int $id): mixed
+    {
+        return $this->db->from($this->tableName)->where('id')->is($id)->select()->first();
+    }
+
     public function count(): int
     {
         return $this->db->from($this->tableName)->count();
@@ -32,6 +37,11 @@ class Model
     public function insert(array $data): ?bool
     {
         return $this->db->insert($data)->into($this->tableName);
+    }
+
+    public function update(int $id, array $data): int
+    {
+        return $this->db->update($this->tableName)->where('id')->is($id)->set($data);
     }
 
     public function getSearchableColumns(): array

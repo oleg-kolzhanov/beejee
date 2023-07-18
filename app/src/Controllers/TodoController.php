@@ -2,7 +2,8 @@
 
 namespace App\Controllers;
 
-use App\Dto\TodoTransformer;
+use App\Dto\TodoCreateTransformer;
+use App\Dto\TodoUpdateTransformer;
 use App\Services\TodoService;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -13,32 +14,31 @@ use Throwable;
  */
 class TodoController extends Controller
 {
-    private TodoTransformer $todoTransformer;
+    private ToDoCreateTransformer $todoCreateTransformer;
+
+    private ToDoUpdateTransformer $todoUpdateTransformer;
 
     private TodoService $todoService;
 
 
-    public function __construct(TodoService $todoService, TodoTransformer $todoTransformer)
+    public function __construct(
+        TodoService $todoService,
+        TodoCreateTransformer $todoCreateTransformer,
+        TodoUpdateTransformer $todoUpdateTransformer
+    )
     {
         $this->todoService = $todoService;
-        $this->todoTransformer = $todoTransformer;
+        $this->todoCreateTransformer = $todoCreateTransformer;
+        $this->todoUpdateTransformer = $todoUpdateTransformer;
 
         parent::__construct();
     }
 
-    /**
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
     public function index(): string
     {
         return $this->render('todo.index');
     }
 
-    /**
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
     public function add(): string
     {
         return $this->render('todo.add');
@@ -51,7 +51,7 @@ class TodoController extends Controller
      */
     public function create(): string
     {
-        $todoDto = $this->todoTransformer->transform($_POST);
+        $todoDto = $this->todoCreateTransformer->transform($_POST);
 
         if ($this->todoService->create($todoDto)) {
             $messageHeader = 'Success';
@@ -65,9 +65,51 @@ class TodoController extends Controller
             $messageButton = 'Try again';
         }
 
-        $template = 'messages.info';
+        return $this->render('messages.info', [
+            'messageHeader' => $messageHeader,
+            'messageText' => $messageText,
+            'messageLink' => $messageLink,
+            'messageButton' => $messageButton,
+        ]);
+    }
 
-        return $this->render($template, [
+    public function edit(int $id): string
+    {
+        $todo = $this->todoService->find($id);
+        if (!$todo) {
+            $this->notFound();
+        }
+
+        $data = ['todo' => $todo];
+        return $this->render('todo.edit', $data);
+    }
+
+    /**
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws Throwable
+     */
+    public function update(int $id): string
+    {
+        if (!$this->isLogged) {
+            return $this->accessDenied();
+        }
+
+        $todoDto = $this->todoUpdateTransformer->transform($_POST);
+
+        if ($this->todoService->update($id, $todoDto)) {
+            $messageHeader = 'Success';
+            $messageText = 'ToDo item was updated.';
+            $messageLink = '/';
+            $messageButton = 'Ok';
+        } else {
+            $messageHeader = 'Error';
+            $messageText = 'ToDo item was not updated.';
+            $messageLink = '/edit/' . $id;
+            $messageButton = 'Try again';
+        }
+
+        return $this->render('messages.info', [
             'messageHeader' => $messageHeader,
             'messageText' => $messageText,
             'messageLink' => $messageLink,

@@ -2,13 +2,22 @@
 
 namespace App\Services;
 
+use App\App;
 use App\Dto\OrderDto;
 use App\Dto\RequestDto;
-use App\Dto\TodoDto;
+use App\Dto\TodoCreateDto;
+use App\Dto\TodoUpdateDto;
 use App\Models\Todo;
+use DI\DependencyException;
+use DI\NotFoundException;
 
 class TodoService
 {
+    public function find(int $id): mixed
+    {
+        $todo = new Todo();
+        return $todo->find($id);
+    }
 
     public function get(RequestDto $requestDto): array
     {
@@ -57,7 +66,7 @@ class TodoService
         ];
     }
 
-    public function create(TodoDto $todoDto): ?bool
+    public function create(TodoCreateDto $todoDto): ?bool
     {
         $todo = new Todo();
 
@@ -68,14 +77,32 @@ class TodoService
         ]);
     }
 
+    public function update(int $id, TodoUpdateDto $todoDto)
+    {
+        $todo = new Todo();
+
+        return $todo->update($id, [
+            'text' => $todoDto->getText(),
+            'done' => $todoDto->isDone() ? 1 : 0,
+        ]);
+    }
+
+    /**
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
     private function format(array $data): array
     {
+        $authService = App::getInstance()->getContainer()->make('App\Services\AuthService');
+
         $result = [];
         foreach ($data as $value) {
             $result[] = [
-                $value->name,
-                $value->email,
-                $value->text,
+                'id' => $value->id,
+                'name' => $value->name,
+                'email' => $value->email,
+                'text' => $value->text,
+                'done' => $value->done ? 'true' : 'false',
             ];
         }
         return$result;
@@ -94,6 +121,9 @@ class TodoService
                 break;
             case 2:
                 $column = 'text';
+                break;
+            case 3:
+                $column = 'done';
                 break;
         }
         return $column;

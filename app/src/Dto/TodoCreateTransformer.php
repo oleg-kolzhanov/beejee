@@ -7,22 +7,22 @@ use Throwable;
 /**
  * Трансформер отзыва.
  */
-class ToDoTransformer extends AbstractArrayTransformer
+class ToDoCreateTransformer extends AbstractArrayTransformer
 {
     /**
      * Трансформирует массив в dto.
      *
      * @param array $data
-     * @return TodoDto
+     * @return TodoCreateDto
      * @throws Throwable
      */
-    public function transform(array $data): TodoDto
+    public function transform(array $data): TodoCreateDto
     {
         $this->assertFieldExist('name', $data);
         $this->assertFieldExist('email', $data);
         $this->assertFieldExist('text', $data);
 
-        return new TodoDto(
+        return new TodoCreateDto(
             $data['name'],
             $data['email'],
             $data['text'],
