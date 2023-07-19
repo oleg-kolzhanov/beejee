@@ -4,17 +4,16 @@ namespace App\Dto;
 
 use App\App;
 use Throwable;
-use function DI\create;
 
 /**
- * Column transformer.
+ * Column data transformer.
  */
 class ColumnTransformer extends AbstractArrayTransformer
 {
     /**
-     * Трансформирует массив в dto.
+     * Transform column data to dto.
      *
-     * @param array $data
+     * @param array $data Column data
      * @return ColumnDto
      * @throws Throwable
      */

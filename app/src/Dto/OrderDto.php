@@ -10,6 +10,8 @@ class OrderDto
     /**
      * Constructor.
      *
+     * @param int $column Column
+     * @param string $dir Direction
      */
     public function __construct(
         private int $column,
@@ -19,6 +21,8 @@ class OrderDto
     }
 
     /**
+     * Get column.
+     *
      * @return int
      */
     public function getColumn(): int
@@ -27,16 +31,20 @@ class OrderDto
     }
 
     /**
-     * @param int $column
+     * Set column.
+     *
+     * @param int $column Column
      * @return OrderDto
      */
-    public function setColumn(int $column): OrderDto
+    public function setColumn(int $column): self
     {
         $this->column = $column;
         return $this;
     }
 
     /**
+     * Get direction.
+     *
      * @return string
      */
     public function getDir(): string
@@ -45,10 +53,12 @@ class OrderDto
     }
 
     /**
-     * @param string $dir
+     * Set direction.
+     *
+     * @param string $dir Direction
      * @return OrderDto
      */
-    public function setDir(string $dir): OrderDto
+    public function setDir(string $dir): self
     {
         $this->dir = $dir;
         return $this;

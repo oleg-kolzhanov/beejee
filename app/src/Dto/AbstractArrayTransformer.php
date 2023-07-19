@@ -11,10 +11,10 @@ use Throwable;
 abstract class AbstractArrayTransformer
 {
     /**
-     * Проверка полей запроса.
+     * Request fields check.
      *
-     * @param string $name Название поля
-     * @param array $data Запрос
+     * @param string $name Field name
+     * @param array $data Request data
      * @return void
      * @throws Throwable
      */

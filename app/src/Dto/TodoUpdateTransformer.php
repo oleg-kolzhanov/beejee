@@ -5,14 +5,14 @@ namespace App\Dto;
 use Throwable;
 
 /**
- * Трансформер отзыва.
+ * To Do update transformer.
  */
 class ToDoUpdateTransformer extends AbstractArrayTransformer
 {
     /**
-     * Трансформирует массив в dto.
+     * Transform To Do update data to dto.
      *
-     * @param array $data
+     * @param array $data To Do update data
      * @return TodoUpdateDto
      * @throws Throwable
      */

@@ -9,13 +9,26 @@ use DI\NotFoundException;
 use Jenssegers\Blade\Blade;
 
 /**
- * Controller.
+ * Base controller.
  */
 class Controller
 {
+    /**
+     * @var App Application instance.
+     */
     protected App $app;
+
+    /**
+     * @var bool Is current user logged in?
+     */
     protected bool $isLogged;
 
+    /**
+     * Constructor.
+     *
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
     public function __construct()
     {
         $this->app = App::getInstance();
@@ -24,12 +37,25 @@ class Controller
         $this->isLogged = $authService->isLogged();
     }
 
+    /**
+     * Render template.
+     *
+     * @param string $template Template name
+     * @param array $data Data to parse to template.
+     * @return string
+     */
     protected function render(string $template, array $data = []): string
     {
         $blade = new Blade([APP_DIR . '/views'], APP_DIR . '/cache');
         return $blade->render($template, $this->getData($data));
     }
 
+    /**
+     * Make JSON resource.
+     *
+     * @param array $data
+     * @return string
+     */
     protected function resource(array $data = []): string
     {
         header('Content-Type: application/json; charset=utf-8');
@@ -37,18 +63,34 @@ class Controller
     }
 
     /**
-     * @param array $data
-     * @return array
+     * Render message template.
+     *
+     * @param string $header Message header
+     * @param string $text Message text
+     * @param string $link Message button link
+     * @param string $button Message button text
+     * @return string
      */
-    private function getData(array $data): array
+    protected function message(
+        string $header,
+        string $text,
+        string $link,
+        string $button
+    ): string
     {
-        $dataCommon = [
-            'isLogged' => $this->isLogged,
-        ];
-
-        return array_merge($data, $dataCommon);
+        return $this->render('messages.info', [
+            'messageHeader' => $header,
+            'messageText' => $text,
+            'messageLink' => $link,
+            'messageButton' => $button,
+        ]);
     }
 
+    /**
+     * Make not found response.
+     *
+     * @return string
+     */
     protected function notFound(): string
     {
         header('Not found', true, 404);
@@ -58,14 +100,14 @@ class Controller
         $messageLink = '/';
         $messageButton = 'Go home';
 
-        return $this->render('messages.info', [
-            'messageHeader' => $messageHeader,
-            'messageText' => $messageText,
-            'messageLink' => $messageLink,
-            'messageButton' => $messageButton,
-        ]);
+        return $this->message($messageHeader, $messageText, $messageLink, $messageButton);
     }
 
+    /**
+     * Make access denied response.
+     *
+     * @return string
+     */
     protected function accessDenied(): string
     {
         header('Access denied', true, 403);
@@ -75,11 +117,21 @@ class Controller
         $messageLink = '/login';
         $messageButton = 'Log in';
 
-        return $this->render('messages.info', [
-            'messageHeader' => $messageHeader,
-            'messageText' => $messageText,
-            'messageLink' => $messageLink,
-            'messageButton' => $messageButton,
-        ]);
+        return $this->message($messageHeader, $messageText, $messageLink, $messageButton);
+    }
+
+    /**
+     * Add common data to template data.
+     *
+     * @param array $data Template data
+     * @return array
+     */
+    private function getData(array $data): array
+    {
+        $dataCommon = [
+            'isLogged' => $this->isLogged,
+        ];
+
+        return array_merge($data, $dataCommon);
     }
 }

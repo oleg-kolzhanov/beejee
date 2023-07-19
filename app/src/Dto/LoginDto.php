@@ -10,6 +10,8 @@ class LoginDto
     /**
      * Constructor.
      *
+     * @param string $login Login
+     * @param string $password Password
      */
     public function __construct(
         private string $login,
@@ -19,7 +21,7 @@ class LoginDto
     }
 
     /**
-     * .
+     * Get login.
      *
      * @return string
      */
@@ -29,9 +31,9 @@ class LoginDto
     }
 
     /**
+     * Set login.
      *
-     *
-     * @param string $login .
+     * @param string $login Login
      * @return $this
      */
     public function setLogin(string $login): self
@@ -41,7 +43,7 @@ class LoginDto
     }
 
     /**
-     *
+     * Get password.
      *
      * @return string
      */
@@ -51,9 +53,9 @@ class LoginDto
     }
 
     /**
+     * Set password.
      *
-     *
-     * @param string $password
+     * @param string $password Password
      * @return $this
      */
     public function setPassword(string $password): self

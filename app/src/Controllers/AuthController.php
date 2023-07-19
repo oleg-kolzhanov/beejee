@@ -11,9 +11,22 @@ use Throwable;
  */
 class AuthController extends Controller
 {
+    /**
+     * @var AuthContract Authenticate service.
+     */
     private AuthContract $authService;
+
+    /**
+     * @var LoginTransformer Log in transformer.
+     */
     private LoginTransformer $loginTransformer;
 
+    /**
+     * Constructor.
+     *
+     * @param AuthContract $authService Authenticate service
+     * @param LoginTransformer $loginTransformer Log in transformer
+     */
     public function __construct(AuthContract $authService, LoginTransformer $loginTransformer)
     {
         $this->authService = $authService;
@@ -22,29 +35,58 @@ class AuthController extends Controller
         parent::__construct();
     }
 
+    /**
+     * Show log in form.
+     *
+     * @return string
+     */
     public function index(): string
     {
         return $this->render('auth.login');
     }
 
     /**
+     * Log in user.
+     *
+     * @return string
      * @throws Throwable
      */
     public function login(): string
     {
         $dto = $this->loginTransformer->transform($_POST);
-        $template = 'auth.login-' . (($this->authService->login($dto)) ? 'success' : 'error');
 
-        return $this->render($template);
+        if ($this->authService->login($dto)) {
+            $messageHeader = 'Welcome';
+            $messageText = 'You are logged in!';
+            $messageLink = '/';
+        } else {
+            $messageHeader = 'Auth error';
+            $messageText = 'Check login and password and try again.';
+            $messageLink = '/login';
+        }
+        $messageButton = 'Ok';
+
+        return $this->message($messageHeader, $messageText, $messageLink, $messageButton);
     }
 
     /**
-     * @throws Throwable
+     * Log out current user.
+     *
+     * @return string
      */
     public function logout(): string
     {
-        $template = 'auth.logout-' . (($this->authService->logout()) ? 'success' : 'error');
+        if ($this->authService->logout()) {
+            $messageHeader = 'Bye!';
+            $messageText = 'You are logged out.';
+            $messageButton = 'Ok';
+        } else {
+            $messageHeader = 'Logout error';
+            $messageText = 'Try again later.';
+            $messageButton = 'Try again';
+        }
+        $messageLink = '/';
 
-        return $this->render($template);
+        return $this->message($messageHeader, $messageText, $messageLink, $messageButton);
     }
 }

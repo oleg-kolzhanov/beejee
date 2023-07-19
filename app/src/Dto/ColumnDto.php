@@ -10,6 +10,11 @@ class ColumnDto
     /**
      * Constructor.
      *
+     * @param string $data Column data
+     * @param string $name Column name
+     * @param bool $searchable Is column searchable
+     * @param bool $orderable Is column orderable
+     * @param SearchDto $search Column searh
      */
     public function __construct(
         private string $data,
@@ -22,6 +27,8 @@ class ColumnDto
     }
 
     /**
+     * Get column data.
+     *
      * @return string
      */
     public function getData(): string
@@ -30,16 +37,20 @@ class ColumnDto
     }
 
     /**
-     * @param string $data
+     * Set column data.
+     *
+     * @param string $data Column data
      * @return ColumnDto
      */
-    public function setData(string $data): ColumnDto
+    public function setData(string $data): self
     {
         $this->data = $data;
         return $this;
     }
 
     /**
+     * Get column name.
+     *
      * @return string
      */
     public function getName(): string
@@ -48,16 +59,20 @@ class ColumnDto
     }
 
     /**
-     * @param string $name
+     * Set column name.
+     *
+     * @param string $name Column name
      * @return ColumnDto
      */
-    public function setName(string $name): ColumnDto
+    public function setName(string $name): self
     {
         $this->name = $name;
         return $this;
     }
 
     /**
+     * Is column searchable?
+     *
      * @return bool
      */
     public function isSearchable(): bool
@@ -66,16 +81,20 @@ class ColumnDto
     }
 
     /**
-     * @param bool $searchable
+     * Set column searchable.
+     *
+     * @param bool $searchable Searchable
      * @return ColumnDto
      */
-    public function setSearchable(bool $searchable): ColumnDto
+    public function setSearchable(bool $searchable): self
     {
         $this->searchable = $searchable;
         return $this;
     }
 
     /**
+     * Is column orderable?
+     *
      * @return bool
      */
     public function isOrderable(): bool
@@ -84,16 +103,20 @@ class ColumnDto
     }
 
     /**
-     * @param bool $orderable
+     * Set column orderable.
+     *
+     * @param bool $orderable Orderable
      * @return ColumnDto
      */
-    public function setOrderable(bool $orderable): ColumnDto
+    public function setOrderable(bool $orderable): self
     {
         $this->orderable = $orderable;
         return $this;
     }
 
     /**
+     * Get column search.
+     *
      * @return SearchDto
      */
     public function getSearch(): SearchDto
@@ -102,10 +125,12 @@ class ColumnDto
     }
 
     /**
-     * @param SearchDto $search
+     * Set column search.
+     *
+     * @param SearchDto $search Search
      * @return ColumnDto
      */
-    public function setSearch(SearchDto $search): ColumnDto
+    public function setSearch(SearchDto $search): self
     {
         $this->search = $search;
         return $this;

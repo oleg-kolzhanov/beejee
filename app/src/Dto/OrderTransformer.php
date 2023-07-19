@@ -5,14 +5,14 @@ namespace App\Dto;
 use Throwable;
 
 /**
- * Order transformer.
+ * Order data transformer.
  */
 class OrderTransformer extends AbstractArrayTransformer
 {
     /**
-     * Трансформирует массив в dto.
+     * Transform order data to dto.
      *
-     * @param array $data
+     * @param array $data Order data
      * @return OrderDto
      * @throws Throwable
      */

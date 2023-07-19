@@ -5,14 +5,14 @@ namespace App\Dto;
 use Throwable;
 
 /**
- * Трансформер отзыва.
+ * Log in data transformer.
  */
 class LoginTransformer extends AbstractArrayTransformer
 {
     /**
-     * Трансформирует массив в dto.
+     * Transform log in data to dto.
      *
-     * @param array $data
+     * @param array $data Log in data
      * @return LoginDto
      * @throws Throwable
      */

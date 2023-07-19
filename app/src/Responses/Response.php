@@ -7,17 +7,28 @@ use App\AppContainer;
 use DI\Container;
 use FastRoute\Dispatcher;
 
+/**
+ *
+ */
 class Response
 {
+    /**
+     * @var Container App DI container.
+     */
     private Container $container;
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         $this->container = AppContainer::getInstance()->getContainer();
     }
 
     /**
-     * @param array $route
+     * Return response.
+     *
+     * @param array $route Route
      * @return void
      */
     public function response(array $route): void
@@ -44,6 +55,8 @@ class Response
     }
 
     /**
+     * Get status.
+     *
      * @param $route
      * @return int
      */
@@ -53,6 +66,8 @@ class Response
     }
 
     /**
+     * Get route callable.
+     *
      * @param $route
      * @return string|array
      */
@@ -62,6 +77,8 @@ class Response
     }
 
     /**
+     * Get parameters.
+     *
      * @param $route
      * @return array
      */
@@ -69,5 +86,4 @@ class Response
     {
         return $route[2];
     }
-
 }

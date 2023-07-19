@@ -3,13 +3,19 @@
 namespace App\Dto;
 
 /**
- * Login DTO.
+ * To Do list DTO.
  */
-class RequestDto
+class TodoListDto
 {
     /**
      * Constructor.
      *
+     * @param int $draw Current page number
+     * @param array $columns Columns
+     * @param array $order Order
+     * @param int $start Start row number
+     * @param int $length Rows quantity
+     * @param SearchDto $search Search
      */
     public function __construct(
         private int $draw,
@@ -23,6 +29,8 @@ class RequestDto
     }
 
     /**
+     * Get current page number.
+     *
      * @return int
      */
     public function getDraw(): int
@@ -31,16 +39,20 @@ class RequestDto
     }
 
     /**
-     * @param int $draw
-     * @return RequestDto
+     * Set current page number.
+     *
+     * @param int $draw Current page number
+     * @return TodoListDto
      */
-    public function setDraw(int $draw): RequestDto
+    public function setDraw(int $draw): self
     {
         $this->draw = $draw;
         return $this;
     }
 
     /**
+     * Get columns.
+     *
      * @return array
      */
     public function getColumns(): array
@@ -49,16 +61,20 @@ class RequestDto
     }
 
     /**
-     * @param array $columns
-     * @return RequestDto
+     * Set columns.
+     *
+     * @param array $columns Columns
+     * @return TodoListDto
      */
-    public function setColumns(array $columns): RequestDto
+    public function setColumns(array $columns): self
     {
         $this->columns = $columns;
         return $this;
     }
 
     /**
+     * Get order.
+     *
      * @return array
      */
     public function getOrder(): array
@@ -67,16 +83,20 @@ class RequestDto
     }
 
     /**
-     * @param array $order
-     * @return RequestDto
+     * Get order.
+     *
+     * @param array $order Order
+     * @return TodoListDto
      */
-    public function setOrder(array $order): array
+    public function setOrder(array $order): self
     {
         $this->order = $order;
         return $this;
     }
 
     /**
+     * Get start row number.
+     *
      * @return int
      */
     public function getStart(): int
@@ -85,16 +105,20 @@ class RequestDto
     }
 
     /**
-     * @param int $start
-     * @return RequestDto
+     * Set start row number.
+     *
+     * @param int $start Start row number
+     * @return TodoListDto
      */
-    public function setStart(int $start): RequestDto
+    public function setStart(int $start): self
     {
         $this->start = $start;
         return $this;
     }
 
     /**
+     * Get rows quantity.
+     *
      * @return int
      */
     public function getLength(): int
@@ -103,16 +127,20 @@ class RequestDto
     }
 
     /**
-     * @param int $length
-     * @return RequestDto
+     * Set rows quantity.
+     *
+     * @param int $length Rows quantity
+     * @return TodoListDto
      */
-    public function setLength(int $length): RequestDto
+    public function setLength(int $length): self
     {
         $this->length = $length;
         return $this;
     }
 
     /**
+     * Get search.
+     *
      * @return SearchDto
      */
     public function getSearch(): SearchDto
@@ -121,10 +149,12 @@ class RequestDto
     }
 
     /**
-     * @param SearchDto $search
-     * @return RequestDto
+     * Set search.
+     *
+     * @param SearchDto $search Search
+     * @return TodoListDto
      */
-    public function setSearch(SearchDto $search): RequestDto
+    public function setSearch(SearchDto $search): self
     {
         $this->search = $search;
         return $this;

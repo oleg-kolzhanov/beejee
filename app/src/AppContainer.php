@@ -9,15 +9,23 @@ use DI\NotFoundException;
 use Exception;
 
 /**
- * Приложение.
+ * Application DI container.
  */
 class AppContainer
 {
+    /**
+     * @var AppContainer App DI container singleton instance.
+     */
     private static self $instance;
 
+    /**
+     * @var Container Base DI container singleton instance.
+     */
     private Container $container;
 
     /**
+     * Constructor.
+     *
      * @throws Exception
      * @throws DependencyException
      * @throws NotFoundException
@@ -26,13 +34,29 @@ class AppContainer
         $this->initContainer();
     }
 
-    protected function __clone() { }
+    /**
+     * Don't allow to clone.
+     *
+     * @return void
+     */
+    protected function __clone(): void { }
 
-    public function __wakeup()
+    /**
+     * Don't allow to wakeup.
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function __wakeup(): void
     {
         throw new Exception("Cannot unserialize AppContainer");
     }
 
+    /**
+     * Return app DI container singleton instance.
+     *
+     * @return self
+     */
     public static function getInstance(): self
     {
         if (!isset(self::$instance)) {
@@ -42,6 +66,8 @@ class AppContainer
     }
 
     /**
+     * Return app DI container.
+     *
      * @return Container
      */
     public function getContainer(): Container
@@ -50,6 +76,9 @@ class AppContainer
     }
 
     /**
+     * Init app DI container.
+     *
+     * @return void
      * @throws Exception
      */
     private function initContainer(): void

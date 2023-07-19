@@ -10,17 +10,32 @@ use DI\NotFoundException;
 use Throwable;
 
 /**
- * Controller.
+ * To Do Controller.
  */
 class TodoController extends Controller
 {
+    /**
+     * @var TodoCreateTransformer Transformer for To Do create request
+     */
     private ToDoCreateTransformer $todoCreateTransformer;
 
+    /**
+     * @var TodoUpdateTransformer Transformer for To Do update request
+     */
     private ToDoUpdateTransformer $todoUpdateTransformer;
 
+    /**
+     * @var TodoService To Do service
+     */
     private TodoService $todoService;
 
-
+    /**
+     * @param TodoService $todoService To Do service
+     * @param TodoCreateTransformer $todoCreateTransformer Transformer for To Do create request
+     * @param TodoUpdateTransformer $todoUpdateTransformer Transformer for To Do update request
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
     public function __construct(
         TodoService $todoService,
         TodoCreateTransformer $todoCreateTransformer,
@@ -34,17 +49,29 @@ class TodoController extends Controller
         parent::__construct();
     }
 
+    /**
+     * Show To Do list.
+     *
+     * @return string
+     */
     public function index(): string
     {
         return $this->render('todo.index');
     }
 
+    /**
+     * Show To Do adding form.
+     *
+     * @return string
+     */
     public function add(): string
     {
         return $this->render('todo.add');
     }
 
     /**
+     * Create To Do.
+     *
      * @throws DependencyException
      * @throws NotFoundException
      * @throws Throwable
@@ -65,14 +92,15 @@ class TodoController extends Controller
             $messageButton = 'Try again';
         }
 
-        return $this->render('messages.info', [
-            'messageHeader' => $messageHeader,
-            'messageText' => $messageText,
-            'messageLink' => $messageLink,
-            'messageButton' => $messageButton,
-        ]);
+        return $this->message($messageHeader, $messageText, $messageLink, $messageButton);
     }
 
+    /**
+     * Show To Do edit form.
+     *
+     * @param int $id To Do identificator
+     * @return string
+     */
     public function edit(int $id): string
     {
         $todo = $this->todoService->find($id);
@@ -85,6 +113,8 @@ class TodoController extends Controller
     }
 
     /**
+     * Update To Do.
+     *
      * @throws DependencyException
      * @throws NotFoundException
      * @throws Throwable
@@ -109,11 +139,6 @@ class TodoController extends Controller
             $messageButton = 'Try again';
         }
 
-        return $this->render('messages.info', [
-            'messageHeader' => $messageHeader,
-            'messageText' => $messageText,
-            'messageLink' => $messageLink,
-            'messageButton' => $messageButton,
-        ]);
+        return $this->message($messageHeader, $messageText, $messageLink, $messageButton);
     }
 }

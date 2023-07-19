@@ -5,14 +5,14 @@ namespace App\Dto;
 use Throwable;
 
 /**
- * Search transformer.
+ * Search data transformer.
  */
 class SearchTransformer extends AbstractArrayTransformer
 {
     /**
-     * Трансформирует массив в dto.
+     * Transform search data to dto.
      *
-     * @param array $data
+     * @param array $data Search data
      * @return SearchDto
      * @throws Throwable
      */

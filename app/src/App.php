@@ -2,39 +2,54 @@
 
 namespace App;
 
-use App\Controllers\ApiController;
-use App\Controllers\AuthController;
-use App\Controllers\TodoController;
 use App\Responses\Response;
 use DI\Container;
-use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
 use FastRoute\Dispatcher;
-use FastRoute\RouteCollector;
 use function FastRoute\simpleDispatcher;
 use Opis\Database\Database;
 use Opis\Database\Connection;
 
 /**
- * Приложение.
+ * Application.
  */
 class App
 {
+    /**
+     * @var App App singleton instance.
+     */
     private static self $instance;
 
+    /**
+     * @var Container DI container instance.
+     */
     private Container $container;
 
+    /**
+     * @var Dispatcher App dispatcher instance.
+     */
     private Dispatcher $dispatcher;
 
+    /**
+     * @var Response App response instance.
+     */
     private Response $response;
 
+    /**
+     * @var array App config.
+     */
     private array $config;
 
+    /**
+     * @var Database App database instance.
+     */
     private Database $db;
 
     /**
+     * Constructor.
+     *
      * @throws Exception
      * @throws DependencyException
      * @throws NotFoundException
@@ -47,13 +62,29 @@ class App
         $this->initResponse();
     }
 
-    protected function __clone() { }
+    /**
+     * Don't allow to clone.
+     *
+     * @return void
+     */
+    protected function __clone(): void { }
 
-    public function __wakeup()
+    /**
+     * Don't allow to wakeup.
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function __wakeup(): void
     {
         throw new Exception("Cannot unserialize App");
     }
 
+    /**
+     * Return app singleton instance.
+     *
+     * @return self
+     */
     public static function getInstance(): self
     {
         if (!isset(self::$instance)) {
@@ -63,7 +94,7 @@ class App
     }
 
     /**
-     * Метод по умолчанию.
+     * Default method.
      *
      * @return void
      */
@@ -71,7 +102,6 @@ class App
     {
 
         $httpMethod = $_SERVER['REQUEST_METHOD'];
-//        $uri = $_SERVER['REQUEST_URI'];
         $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
         $route = $this->dispatcher->dispatch($httpMethod, $uri);
@@ -79,6 +109,8 @@ class App
     }
 
     /**
+     * Return app DI container instance.
+     *
      * @return Container
      */
     public function getContainer(): Container
@@ -87,6 +119,8 @@ class App
     }
 
     /**
+     * Return app dispatcher instance.
+     *
      * @return Dispatcher
      */
     public function getDispatcher(): Dispatcher
@@ -95,6 +129,8 @@ class App
     }
 
     /**
+     * Return app response instance.
+     *
      * @return Response
      */
     public function getResponse(): Response
@@ -103,6 +139,8 @@ class App
     }
 
     /**
+     * Return app config.
+     *
      * @return array
      */
     public function getConfig(): array
@@ -111,6 +149,8 @@ class App
     }
 
     /**
+     * Return app database instance.
+     *
      * @return Database
      */
     public function getDb(): Database
@@ -119,6 +159,8 @@ class App
     }
 
     /**
+     * Initialize app DI container instance.
+     *
      * @throws Exception
      */
     private function initContainer(): void
@@ -127,6 +169,9 @@ class App
     }
 
     /**
+     * Initialize app database instance.
+     *
+     * @return void
      * @throws DependencyException
      * @throws NotFoundException
      */
@@ -144,26 +189,33 @@ class App
     }
 
     /**
+     * Initialize app dispatcher instance.
+     *
      * @return void
      */
     private function initDispatcher(): void
     {
-        $this->dispatcher = simpleDispatcher(function (RouteCollector $r) {
-            $r->addRoute('GET', '/', [TodoController::class, 'index']);
-            $r->addRoute('GET', '/add', [TodoController::class, 'add']);
-            $r->addRoute('POST', '/create', [TodoController::class, 'create']);
-            $r->addRoute('GET', '/edit/{id}', [TodoController::class, 'edit']);
-            $r->addRoute('POST', '/update/{id}', [TodoController::class, 'update']);
-            $r->addRoute('POST', '/done', [TodoController::class, 'done']);
-            $r->addRoute('GET', '/view/{id}', [TodoController::class, 'show']);
-            $r->addRoute('GET', '/login', [AuthController::class, 'index']);
-            $r->addRoute('POST', '/login', [AuthController::class, 'login']);
-            $r->addRoute('GET', '/logout', [AuthController::class, 'logout']);
-            $r->addRoute('POST', '/api/v1/get', [ApiController::class, 'index']);
-        });
+        $this->dispatcher = simpleDispatcher(
+            include APP_DIR . '/routes/app.php'
+        );
+//        $this->dispatcher = simpleDispatcher(function (RouteCollector $r) {
+//            $r->addRoute('GET', '/', [TodoController::class, 'index']);
+//            $r->addRoute('GET', '/add', [TodoController::class, 'add']);
+//            $r->addRoute('POST', '/create', [TodoController::class, 'create']);
+//            $r->addRoute('GET', '/edit/{id}', [TodoController::class, 'edit']);
+//            $r->addRoute('POST', '/update/{id}', [TodoController::class, 'update']);
+//            $r->addRoute('POST', '/done', [TodoController::class, 'done']);
+//            $r->addRoute('GET', '/view/{id}', [TodoController::class, 'show']);
+//            $r->addRoute('GET', '/login', [AuthController::class, 'index']);
+//            $r->addRoute('POST', '/login', [AuthController::class, 'login']);
+//            $r->addRoute('GET', '/logout', [AuthController::class, 'logout']);
+//            $r->addRoute('POST', '/api/v1/get', [ApiController::class, 'index']);
+//        });
     }
 
     /**
+     * Initialize app response instance.
+     *
      * @return void
      * @throws DependencyException
      * @throws NotFoundException
@@ -174,10 +226,12 @@ class App
     }
 
     /**
+     * Initialize app config.
+     *
      * @return void
      */
     private function initConfig(): void
     {
-        $this->config = include APP_DIR. '/config/app.php';
+        $this->config = include APP_DIR . '/config/app.php';
     }
 }

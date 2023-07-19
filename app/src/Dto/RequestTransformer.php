@@ -7,18 +7,18 @@ use Throwable;
 use function DI\create;
 
 /**
- * Request transformer.
+ * Request data transformer.
  */
 class RequestTransformer extends AbstractArrayTransformer
 {
     /**
-     * Трансформирует массив в dto.
+     * Transform request data to dto.
      *
-     * @param array $data
-     * @return RequestDto
+     * @param array $data Request data
+     * @return TodoListDto
      * @throws Throwable
      */
-    public function transform(array $data): RequestDto
+    public function transform(array $data): TodoListDto
     {
         $this->assertFieldExist('draw', $data);
         $this->assertFieldExist('columns', $data);
@@ -48,7 +48,7 @@ class RequestTransformer extends AbstractArrayTransformer
             $orders[] = $orderTransformer->transform($order);
         }
 
-        return new RequestDto(
+        return new TodoListDto(
             (int) $data['draw'],
             $columns,
             $orders,

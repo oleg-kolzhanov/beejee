@@ -3,13 +3,16 @@
 namespace App\Dto;
 
 /**
- * ToDo DTO.
+ * To Do create DTO.
  */
 class TodoCreateDto
 {
     /**
      * Constructor.
      *
+     * @param string $name Name
+     * @param string $email Email
+     * @param string $text Text
      */
     public function __construct(
         private string $name,
@@ -20,6 +23,8 @@ class TodoCreateDto
     }
 
     /**
+     * Get name.
+     *
      * @return string
      */
     public function getName(): string
@@ -28,16 +33,20 @@ class TodoCreateDto
     }
 
     /**
-     * @param string $name
+     * Set name.
+     *
+     * @param string $name Name
      * @return TodoCreateDto
      */
-    public function setName(string $name): TodoCreateDto
+    public function setName(string $name): self
     {
         $this->name = $name;
         return $this;
     }
 
     /**
+     * Get email.
+     *
      * @return string
      */
     public function getEmail(): string
@@ -46,16 +55,20 @@ class TodoCreateDto
     }
 
     /**
-     * @param string $email
+     * Set email.
+     *
+     * @param string $email Email
      * @return TodoCreateDto
      */
-    public function setEmail(string $email): TodoCreateDto
+    public function setEmail(string $email): self
     {
         $this->email = $email;
         return $this;
     }
 
     /**
+     * Get text.
+     *
      * @return string
      */
     public function getText(): string
@@ -64,10 +77,12 @@ class TodoCreateDto
     }
 
     /**
-     * @param string $text
+     * Set text.
+     *
+     * @param string $text Text
      * @return TodoCreateDto
      */
-    public function setText(string $text): TodoCreateDto
+    public function setText(string $text): self
     {
         $this->text = $text;
         return $this;
