@@ -93,8 +93,6 @@ class Controller
      */
     protected function notFound(): string
     {
-        header('Not found', true, 404);
-
         $messageHeader = 'Not found';
         $messageText = 'This page not found.';
         $messageLink = '/';
@@ -110,8 +108,6 @@ class Controller
      */
     protected function accessDenied(): string
     {
-        header('Access denied', true, 403);
-
         $messageHeader = 'Access denied';
         $messageText = 'Log in to access.';
         $messageLink = '/login';

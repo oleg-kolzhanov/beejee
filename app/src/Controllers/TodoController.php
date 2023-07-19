@@ -98,11 +98,15 @@ class TodoController extends Controller
     /**
      * Show To Do edit form.
      *
-     * @param int $id To Do identificator
+     * @param int $id To Do identity
      * @return string
      */
     public function edit(int $id): string
     {
+        if (!$this->isLogged) {
+            return $this->accessDenied();
+        }
+
         $todo = $this->todoService->find($id);
         if (!$todo) {
             $this->notFound();

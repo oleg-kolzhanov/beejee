@@ -10,6 +10,7 @@ use App\Dto\TodoUpdateDto;
 use App\Models\Todo;
 use DI\DependencyException;
 use DI\NotFoundException;
+use RuntimeException;
 
 /**
  * To Do Service.
@@ -93,6 +94,10 @@ class TodoService
     {
         $todo = new Todo();
 
+        if (empty($todoDto->getName()) || empty($todoDto->getEmail()) || empty($todoDto->getText())) {
+            throw new RuntimeException('Fill all required fields');
+        }
+
         return $todo->insert([
             'name' => $todoDto->getName(),
             'email' => $todoDto->getEmail(),
@@ -110,6 +115,10 @@ class TodoService
     public function update(int $id, TodoUpdateDto $todoDto): int
     {
         $todo = new Todo();
+
+        if (empty($todoDto->getText())) {
+            throw new RuntimeException('Fill all required fields');
+        }
 
         return $todo->update($id, [
             'text' => $todoDto->getText(),

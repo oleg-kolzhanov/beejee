@@ -2,7 +2,7 @@
 
 @section('content')
     <h1 class="mb-4">Edit ToDo</h1>
-    <form action="/update/{{ $todo->id }}" method="post" class="row g-3 needs-validation" novalidate>
+    <form action="/update/{{ $todo->id }}" method="post" class="row g-3 needs-validation">
         <div class="col-md-6">
             <label for="inputName" class="form-label">Name</label>
             <input type="text" class="form-control" id="inputName" name="name" value="{{ $todo->name }}" disabled>
@@ -13,7 +13,7 @@
         </div>
         <div class="mb-3">
             <label for="inputText" class="form-label">Text</label>
-            <textarea class="form-control" id="inputText" rows="6" name="text">{{ $todo->text }}</textarea>
+            <textarea class="form-control" id="inputText" rows="6" name="text" required>{{ $todo->text }}</textarea>
         </div>
         <div class="invalid-email">
             Please enter a text.
